@@ -131,6 +131,8 @@ define([], function() {
             console.log('ERROR: parsing data-alt', err);
         }
 
+        console.log(altData);
+
         if (altData && altData.hasOwnProperty('title')) {
             navigationTitle.innerHTML = altData.title; 
         } else {
