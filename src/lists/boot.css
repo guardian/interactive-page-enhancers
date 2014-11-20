@@ -47,7 +47,7 @@
 }
 
 .article_nav.active h2 {
-    display: none;
+    //display: none;
 }
 
 @media (max-width: 46.25em) {
@@ -96,18 +96,25 @@
 
 .article_nav.active .menu {
     position: absolute;
-    top: 9px;
+    top: 6px;
     right: 10px;
-
     display: block;
-
     padding-left: 1.4em;
+    background: #FFF;
+    height: 1.8em;
+    border-radius: 50%;
+    width: 0.4em;
+    cursor: pointer;
 }
 
-.article_nav.active .menu::before {
+.openNav.article_nav.active .menu {
+    background-color: #FFF !important;
+}
+
+.article_nav.active .menu .menu-ham {
     position: absolute;
-    top: .37em;
-    left: 0;
+    top: .57em;
+    left: 0.41em;
 
     width: 1em;
     height: .125em;
@@ -117,6 +124,33 @@
 
     border-top: .375em double #000;
     border-bottom: .125em solid #000;
+}
+
+.article_nav ol {
+    list-style-type: none;
+}
+
+.article_nav li {
+    counter-increment: item;
+    display: inline-block;
+    float: left;
+    counter-increment: item;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 1.7em;
+    text-align: center;
+    line-height: 1.8em;
+    cursor: pointer;
+    margin: 2px;
+    color: #FFF;
+}
+
+.article_nav li a {
+    display: none;
+}
+
+.article_nav li:before {
+    content: counter(item) "  "; 
 }
 
 @media(min-width:480px) {
@@ -165,4 +199,35 @@
     font-weight: 300;
     color: #828282;
     font-size: 1.1rem;
+}
+
+
+.superlist-prenext-btn.superlist-prenext-pre {
+    width: 20px;
+    height: 20px;
+    background: red;
+}
+
+h2.superlist-nav-headline {
+    margin-top: -2em;
+    float: left;
+    font-weight: 300;
+    font-size: 1em;
+    color: #FFF;
+}
+
+
+.superlist-nav-headline .superlist-nav-section {
+    display: inline-block;
+    font-weight: 700;
+    padding-right: 10px;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

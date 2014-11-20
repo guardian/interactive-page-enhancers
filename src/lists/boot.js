@@ -43,7 +43,13 @@ define([], function() {
     var wrapperEl;
     var navEl;
     var h2s;
+    var altData;
+    var headings;
     var previousValue = false;
+    var colours = {};
+
+    // Match: 1. Heading | sub heading
+    var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
 
     function resizeWrapper() {
         if (navEl.className.indexOf('active') === -1) {
@@ -111,56 +117,133 @@ define([], function() {
         window.scrollTo(0, pos);
     }
 
+    // Returns the requested element's text by looking at data-alt and the
+    // window.guardian page object
+    function getPageElementText(elmName) {
+        var text = elmName;
+
+        if (altData && altData.hasOwnProperty(elmName)) {
+            text = altData[elmName];
+        } else if (guardian && guardian.config.page.hasOwnProperty(elmName)) {
+            text = guardian.config.page[elmName];    
+        }
+
+        return text;
+    }
+
+
+    function createElement(elmName, attributes) {
+        var elm = document.createElement(elmName);
+        Object.keys(attributes)
+            .forEach(function(key) {
+                elm.setAttribute(key, attributes[key]);
+            });
+        return elm;
+    }
+
+    function getCSSValue(elm, property) {
+        var styles = window.getComputedStyle(elm, null);
+        return styles.getPropertyValue(property);
+    }
+
+    function getAltData() {
+        var altText = figureEl.getAttribute('data-alt');
+        try {
+            altData = JSON.parse(altText);
+        } catch(err) {
+            return console.log('ERROR: parsing data-alt', err);
+        }
+        
+        return altData;
+    }
+
+    function navToNextItem() {
+        console.log('next');
+    }
+
+    function navToPreviousItem() {
+        console.log('prev', altData);
+    }
+
+
+    function createPrevNextNav() {
+        var wrapperEl = createElement('div', { class: 'superlist-prenext-wrapper' });
+
+        var preEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-pre' });
+        preEl.addEventListener('click', navToPreviousItem, false);
+        wrapperEl.appendChild(preEl);
+        
+        var nextEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-next' });
+        nextEl.addEventListener('click', navToNextItem, false);
+        wrapperEl.appendChild(nextEl);
+        
+        return wrapperEl;
+    }
+
+    function createListItemEl(heading, i) {
+        var navListItem = document.createElement('li');
+        navListItem.addEventListener('mouseover', navItemMouseOver, false);
+        navListItem.addEventListener('mouseout', navItemMouseOut, false);
+        
+        heading.el.setAttribute('id', 'nav' + i);
+        heading.el.setAttribute('name', 'nav' + i);
+
+        var navLink = document.createElement('a');
+        navLink.href = '#' + heading.el.getAttribute('id');
+        navLink.innerHTML = heading.title + ' - ' + heading.subTitle;
+        navLink.setAttribute('data-title', (i + 1) + '. ' + heading.title);
+        navLink.addEventListener('click', jumpToHeading, false);
+        navListItem.appendChild(navLink);
+
+        return navListItem;
+    }
+
+    function getColours() {
+        var headerEl = document.querySelector('.tonal__header');
+        colours.header = getCSSValue(headerEl, 'background-color') || '#CCC';
+
+        var standEl = document.querySelector('.tonal__standfirst');
+        colours.stand = getCSSValue(standEl, 'background-color') || '#EEE';
+
+        var sectionEl = document.querySelector('.content__section-label__link');
+        colours.section =  getCSSValue(sectionEl, 'color') || '#666';
+
+        return colours;
+    }
 
     function setupDOM() {
         mainBodyEl = document.querySelector('.content__main-column.content__main-column--article');
         articleBodyEl = document.querySelector('.content__article-body');
         h2s = document.querySelectorAll('.content__article-body h2');
+        navEl = createElement('div', { class: 'article_nav noselect', id: 'article-navigation' });
+        navEl.style.backgroundColor = colours.header; 
+        navEl.style.borderColor = colours.stand; 
 
-        navEl = document.createElement('div');
-        navEl.setAttribute('id','article-navigation');
-        navEl.className += ' article_nav';
-
-        var navigationTitle = document.createElement('h2');
-        var altText = figureEl.getAttribute('data-alt');
-        var altData;
-
-        try {
-            altData = JSON.parse(altText);
-        } catch(err) {
-            console.log('ERROR: parsing data-alt', err);
-        }
-
-        if (altData && altData.hasOwnProperty('title')) {
-            navigationTitle.innerHTML = altData.title; 
-        } else {
-            navigationTitle.innerHTML = 'Navigation'; 
-        }
-        navEl.appendChild(navigationTitle);
+        var sectionText = getPageElementText('sectionName');
+        var navSectionEl = createElement('span', { class: 'superlist-nav-section'});
+        navSectionEl.style.color = colours.section;
+        navSectionEl.innerHTML = sectionText; 
+        navEl.appendChild(navSectionEl);
         
-
-        var chapterNames = Array.prototype.map.call(h2s, function(el) {
-            return el.innerHTML;
-        }); 
+        var headlineText = getPageElementText('headline');
+        var navHeadlineEl = createElement('h2', { class: 'superlist-nav-headline'});
         
+        navHeadlineEl.appendChild(navSectionEl);
+        navHeadlineEl.appendChild(document.createTextNode( headlineText )); 
+        navEl.appendChild(navHeadlineEl);
+        navEl.appendChild(createPrevNextNav()); 
+
+        headings = Array.prototype.map.call(h2s, getHeadingParts); 
+
         var navList = document.createElement('ol');
-        
-        Array.prototype.map.call(h2s, function(el, i) {
-            var headingParts = getHeadingParts(el);
-            modifyHeading(el, headingParts);
+        Array.prototype.map.call(headings, function(heading, i) {
+            if (!heading) {
+                return;
+            }
 
-            var navListItem = document.createElement('li');
-            el.setAttribute('id', 'nav' + i);
-            el.setAttribute('name', 'nav' + i);
-
-            var navLink = document.createElement('a');
-            navLink.href = '#' + el.getAttribute('id');
-            navLink.innerHTML = chapterNames[i];
-            navLink.setAttribute('data-title', (i + 1) + '. ' + chapterNames[i]);
-            navLink.addEventListener('click', jumpToHeading, false);
-
-            navListItem.appendChild(navLink);
-            navList.appendChild(navListItem);
+            modifyHeading(heading);
+            var liEl = createListItemEl(heading, i);
+            navList.appendChild(liEl);
         });
 
         navEl.appendChild(navList);
@@ -175,14 +258,30 @@ define([], function() {
         articleBodyEl.insertBefore(wrapperEl, articleBodyEl.firstElementChild);
         
         // Add menu button
-        var menuEl = document.createElement('div');
-        menuEl.className +=  ' menu';
+        var menuEl = createElement('div', { class: 'menu' });
+        var hamEl = createElement('div', { class: 'menu-ham' });
+        hamEl.style.borderColor = colours.header;
+        menuEl.appendChild(hamEl);
+        menuEl.style.backgroundColor = colours.section;
         navEl.appendChild(menuEl);
     
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
         }
     }
+
+    function navItemMouseOver(event) {
+        var el = event.currentTarget;
+        el.style.backgroundColor = colours.section;
+        el.style.color = colours.header;
+    }
+
+    function navItemMouseOut(event) {
+        var el = event.currentTarget;
+        el.style.backgroundColor = 'transparent';
+        el.style.color = '#FFF';
+    }
+
 
     function handleNavClick() {
         if (navEl.className.indexOf('active') === -1) {
@@ -198,38 +297,37 @@ define([], function() {
 
     function getHeadingParts(el) {
         var text = (el.innerText || el.textContent);
-        text = text.trim();
-
-        var num = text.match(/^(\d+)(?=.)/i)[1];        
-        var title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i)[1];        
-        var subTitle = text.match(/\|\W*(.+)\W*$/i)[1];
+        if (!text || !LIST_HEADING_REGEX.test(text)) {
+            console.log('GUI: Heading did not match pattern', el);
+            return false;
+        }
 
         return {
-            num: num,
-            title: title,
-            subTitle: subTitle
+            num: text.match(/^(\d+)(?=.)/i)[1],
+            title: text.match(/^\d+.\W*(.+)(?=\W*\|)/i)[1],
+            subTitle: text.match(/\|\W*(.+)\W*$/i)[1],
+            el: el
         };
     }
 
-    function modifyHeading(el, textParts) {
-        el.classList.add('superlist-item');
-        el.innerHTML = '';
+    function modifyHeading(heading) {
+        heading.el.classList.add('superlist-item');
+        heading.el.innerHTML = '';
         
         var numEl = document.createElement('span');
         numEl.setAttribute('class', 'superlist-number');
-        numEl.innerHTML = textParts.num;
-        el.appendChild(numEl);
+        numEl.innerHTML = heading.num;
+        heading.el.appendChild(numEl);
 
         var titleEl = document.createElement('span');
         titleEl.setAttribute('class', 'superlist-title');
-        titleEl.innerHTML = textParts.title;
-        el.appendChild(titleEl);
+        titleEl.innerHTML = heading.title;
+        heading.el.appendChild(titleEl);
 
         var subTitleEl = document.createElement('span');
         subTitleEl.setAttribute('class', 'superlist-subtitle');
-        subTitleEl.innerHTML = textParts.subTitle;
-        el.appendChild(subTitleEl);
-       
+        subTitleEl.innerHTML = heading.subTitle;
+        heading.el.appendChild(subTitleEl);
     }
 
     // TODO: Better way to determine top
@@ -252,6 +350,8 @@ define([], function() {
 
     function boot(el) {
         figureEl = el;
+        getColours();
+        getAltData(); 
         setupDOM();
         throttledScroll();
         throttledResize();
