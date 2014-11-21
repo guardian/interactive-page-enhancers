@@ -42,11 +42,14 @@ define([], function() {
     var headingsEls;
     var wrapperEl;
     var navEl;
+    var preNumEl;
+    var nextNumEl;
     var h2s;
     var altData;
     var headings;
     var previousValue = false;
     var colours = {};
+    var currentChapterIndex = 0;
 
     // Match: 1. Heading | sub heading
     var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
@@ -89,9 +92,20 @@ define([], function() {
         }
 
         var currentChapter = headingLinks[getNearestTopIndex()];
+        currentChapterIndex = getNearestTopIndex();
+        updateNav();
+
         if (currentChapter) {
             currentChapter.className += 'active-link';
         }
+    }
+
+    function updateNav() {
+        var preNum = (currentChapterIndex - 1 < 1) ? 1 : currentChapterIndex - 1; 
+        var nexNum = (currentChapterIndex - 1 < 1) ? 3 : currentChapterIndex + 1; 
+
+        preNumEl.innerHTML = preNum;
+        nextNumEl.innerHTML = nexNum;
     }
 
     function isStaticNavOutOfView() {
@@ -108,11 +122,8 @@ define([], function() {
         head.appendChild(cssEl);
     }
 
-    function jumpToHeading(event) {
-        event.preventDefault();
-        var eventElement = event.currentTarget;
-        var targetEl = document.querySelector(eventElement.getAttribute('href'));
-        var pos = targetEl.getBoundingClientRect().top + window.pageYOffset;
+    function jumpToHeading(el) {
+        var pos = el.getBoundingClientRect().top + window.pageYOffset;
         pos -= window.innerHeight / 8;
         window.scrollTo(0, pos);
     }
@@ -157,12 +168,21 @@ define([], function() {
         return altData;
     }
 
-    function navToNextItem() {
-        console.log('next');
+    function navToNextItem(e) {
+        e.stopPropagation();
+        jumpToHeading(headings[currentChapterIndex + 1].el);
+        
     }
 
-    function navToPreviousItem() {
-        console.log('prev', altData);
+    function navToPreviousItem(e) {
+        e.stopPropagation();
+        jumpToHeading(headings[currentChapterIndex - 1].el);
+    }
+
+    function navToHeading(e) {
+        var el = event.currentTarget;
+        var id = el.getAttribute('data-id');
+        jumpToHeading(headings[id].el);
     }
 
 
@@ -170,10 +190,17 @@ define([], function() {
         var wrapperEl = createElement('div', { class: 'superlist-prenext-wrapper' });
 
         var preEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-pre' });
+        preEl.innerHTML = '<i class="i i-arrow-white-right i-arrow-white-left"></i>';
+        preNumEl = createElement('span', { class: 'superlist-prenext-num pre-num' });
+        preEl.appendChild(preNumEl);
         preEl.addEventListener('click', navToPreviousItem, false);
         wrapperEl.appendChild(preEl);
         
         var nextEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-next' });
+        nextEl.innerHTML = '<i class="i i-arrow-white-right"></i>';
+        nextNumEl = createElement('span', { class: 'superlist-prenext-num next-num' });
+        nextEl.appendChild(nextNumEl);
+
         nextEl.addEventListener('click', navToNextItem, false);
         wrapperEl.appendChild(nextEl);
         
@@ -184,6 +211,8 @@ define([], function() {
         var navListItem = document.createElement('li');
         navListItem.addEventListener('mouseover', navItemMouseOver, false);
         navListItem.addEventListener('mouseout', navItemMouseOut, false);
+        navListItem.addEventListener('click', navToHeading, false);
+        navListItem.setAttribute('data-id', i);
         
         heading.el.setAttribute('id', 'nav' + i);
         heading.el.setAttribute('name', 'nav' + i);
@@ -192,7 +221,7 @@ define([], function() {
         navLink.href = '#' + heading.el.getAttribute('id');
         navLink.innerHTML = heading.title + ' - ' + heading.subTitle;
         navLink.setAttribute('data-title', (i + 1) + '. ' + heading.title);
-        navLink.addEventListener('click', jumpToHeading, false);
+        //navLink.addEventListener('click', jumpToHeading, false);
         navListItem.appendChild(navLink);
 
         return navListItem;
@@ -272,8 +301,8 @@ define([], function() {
 
     function navItemMouseOver(event) {
         var el = event.currentTarget;
-        el.style.backgroundColor = colours.section;
-        el.style.color = colours.header;
+        el.style.backgroundColor = colours.stand;
+        //el.style.color = colours.header;
     }
 
     function navItemMouseOut(event) {

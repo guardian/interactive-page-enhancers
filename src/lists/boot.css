@@ -17,6 +17,7 @@
     margin-bottom: 5px;
 }
 .article_nav ol {
+    clear: both;
     margin-bottom: 0;
 }
 .article_nav ol li {
@@ -24,16 +25,13 @@
 }
 .article_nav.active {
     font-size: 16px;
-
     position: fixed;
     z-index: 99999;
     top: 0;
-
     overflow: hidden;
-
     box-sizing: border-box;
     height: 0;
-    padding: 40px 0 0 10px;
+    /* padding: 40px 0 0 10px; */
 
     -webkit-transition: top 200ms cubic-bezier(.17, .04, .03, .94);
             transition: top 200ms cubic-bezier(.17, .04, .03, .94);
@@ -44,6 +42,7 @@
     border-left: 1px solid #dcdcdc;
     background: #fff;
     box-shadow: 0 2px 1px rgba(0, 0, 0, .1);
+    height: 43px;
 }
 
 .article_nav.active h2 {
@@ -60,7 +59,6 @@
 .article_nav.active.openNav {
     height: auto;
     padding-bottom: 10px;
-
     border-right: 1px solid #dcdcdc;
     border-bottom: 3px solid #4bc6df;
     border-left: 1px solid #dcdcdc;
@@ -78,12 +76,9 @@
     position: absolute;
     top: 9px;
     left: 10px;
-
     overflow: hidden;
-
     width: 90%;
     max-width: 380px;
-
     content: attr(data-title);
     cursor: pointer;
     white-space: nowrap;
@@ -115,13 +110,10 @@
     position: absolute;
     top: .57em;
     left: 0.41em;
-
     width: 1em;
     height: .125em;
-
     content: '';
     cursor: pointer;
-
     border-top: .375em double #000;
     border-bottom: .125em solid #000;
 }
@@ -201,15 +193,59 @@
     font-size: 1.1rem;
 }
 
+.superlist-prenext-wrapper {
+    float: left;
+    overflow: hidden;
+    position: absolute;
+    top: 9px;
+    right: 50px;
+}
+
+.superlist-prenext-btn {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20%/50%;
+    width: 3em;
+    line-height: 0.6em;
+    cursor: pointer;
+    float: left;
+    position: relative;
+}
+
+.superlist-prenext-btn .i-arrow-white-right {
+    height: 23px;
+    width: 23px;
+    position: absolute;
+    right: 0;
+}
+
+.superlist-prenext-btn .i-arrow-white-left {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+    left: 0;
+}
+
+.superlist-prenext-num {
+    line-height: 1.5em;
+    display: inline-block;
+    color: #FFF;
+    margin: 0 0 0 21px;
+}
+
+.superlist-prenext-num.next-num {
+    margin: 0 0 0 7px;
+}
+
 
 .superlist-prenext-btn.superlist-prenext-pre {
-    width: 20px;
-    height: 20px;
-    background: red;
+    margin-right: 5px;
 }
 
 h2.superlist-nav-headline {
-    margin-top: -2em;
+    /* margin-top: -2em; */
     float: left;
     font-weight: 300;
     font-size: 1em;
