@@ -53,6 +53,14 @@
     .article_nav.active {
         left: 0;
     }
+
+    h2.superlist-nav-headline {
+        visibility: hidden;
+    }
+
+    .superlist-prenext-wrapper {
+        left: 10px;
+    }
 }
 
 
@@ -161,6 +169,7 @@
         page-break-inside: avoid;
         break-inside: avoid;
     }
+
 }
 
 

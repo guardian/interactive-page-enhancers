@@ -170,13 +170,16 @@ define([], function() {
 
     function navToNextItem(e) {
         e.stopPropagation();
-        jumpToHeading(headings[currentChapterIndex + 1].el);
-        
+        if (currentChapterIndex < headings.length - 1) {
+            jumpToHeading(headings[currentChapterIndex + 1].el);
+        }
     }
 
     function navToPreviousItem(e) {
         e.stopPropagation();
-        jumpToHeading(headings[currentChapterIndex - 1].el);
+        if (currentChapterIndex > 0) {
+            jumpToHeading(headings[currentChapterIndex - 1].el);
+        }
     }
 
     function navToHeading(e) {
