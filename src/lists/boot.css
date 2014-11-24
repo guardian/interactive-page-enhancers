@@ -158,9 +158,9 @@
     border: 1px solid #FFF;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    width: 1.7em;
+    width: 2em;
     text-align: center;
-    line-height: 1.8em;
+    line-height: 2em;
     cursor: pointer;
     margin: 2px;
     color: #FFF;
@@ -175,14 +175,14 @@
 }
 
 
-.active .superlist-item {
+.active.article_nav .superlist-item {
     overflow: hidden;
-    border-top: 1px solid rgb(239, 239, 239);
-    padding-top: 4px;
+    padding-top: 1px;
+    line-height: 2em;
 }
 
 
-.active .superlist-number {
+.superlist-number {
     float: left;
     display: block;
     color: #979797;
@@ -192,11 +192,11 @@
     line-height: 1em;
 }
 
-.active .superlist-title {
+.superlist-title {
     display: block;
 }
 
-.active .superlist-subtitle {
+.superlist-subtitle {
     display: block;
     font-weight: 300;
     color: #828282;

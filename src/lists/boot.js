@@ -189,7 +189,7 @@
     }
 
     function navToHeading(e) {
-        var el = event.currentTarget;
+        var el = e.currentTarget;
         var id = el.getAttribute('data-id');
         jumpToHeading(headings[id].el);
     }
