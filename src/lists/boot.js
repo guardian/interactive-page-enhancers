@@ -51,9 +51,11 @@
     var colours = {};
     var currentChapterIndex = 0;
     var cssText = '';
+    var isNumberedList;
 
     // Match: 1. Heading | sub heading
     var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
+    var NUMBER_START_REGEX = /^\W?\d+?\./;
 
     function resizeWrapper() {
         if (navEl.className.indexOf('active') === -1) {
@@ -230,10 +232,10 @@
         navLink.href = '#' + heading.el.getAttribute('id');
 
         var linkTitleEl = createElement('span', { class: 'superlist-link-title' });
-        linkTitleEl.innerHTML = heading.title.trim();
+        linkTitleEl.innerHTML = heading.title;
         
         var linkSubTitleEl = createElement('span', { class: 'superlist-link-subtitle' });
-        linkSubTitleEl.innerHTML = heading.subTitle.trim();
+        linkSubTitleEl.innerHTML = heading.subTitle;
 
         navLink.appendChild(linkTitleEl);
         navLink.appendChild(linkSubTitleEl);
@@ -341,17 +343,29 @@
 
     function getHeadingParts(el) {
         var text = (el.innerText || el.textContent);
-        if (!text || !LIST_HEADING_REGEX.test(text)) {
+        if (!text) {
             console.log('GUI: Heading did not match pattern', el);
             return false;
         }
 
-        return {
-            num: text.match(/^(\d+)(?=.)/i)[1],
-            title: text.match(/^\d+.\W*(.+)(?=\W*\|)/i)[1],
-            subTitle: text.match(/\|\W*(.+)\W*$/i)[1],
-            el: el
-        };
+        if (LIST_HEADING_REGEX.test(text)) {
+            var num = text.match(/^(\d+)(?=.)/i);
+            var title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i);
+            var subTitle = text.match(/\|\W*(.+)\W*$/i);
+        }
+
+        if (!NUMBER_START_REGEX.test(text)) {
+            var title = text.match(/^([^\|]+)/i);
+            var subTitle = text.match(/(?:\|)(.+)$/i);
+        }
+
+            return {
+                num: (num) ? num[1].trim() : null, 
+                title: (title) ? title[1].trim() : null,
+                subTitle: (subTitle) ? subTitle[1].trim() : null, 
+                el: el
+            };
+       
     }
 
     function modifyHeading(heading) {
