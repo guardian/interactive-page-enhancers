@@ -93,7 +93,7 @@ define([], function() {
 
         var currentChapter = headingLinks[getNearestTopIndex()];
         currentChapterIndex = getNearestTopIndex();
-        updateNav();
+        //updateNav();
 
         if (currentChapter) {
             currentChapter.className += 'active-link';
@@ -195,6 +195,7 @@ define([], function() {
         var preEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-pre' });
         preEl.innerHTML = '<i class="i i-arrow-white-right i-arrow-white-left"></i>';
         preNumEl = createElement('span', { class: 'superlist-prenext-num pre-num' });
+        preNumEl.innerHTML = 'Prev';
         preEl.appendChild(preNumEl);
         preEl.addEventListener('click', navToPreviousItem, false);
         wrapperEl.appendChild(preEl);
@@ -202,6 +203,7 @@ define([], function() {
         var nextEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-next' });
         nextEl.innerHTML = '<i class="i i-arrow-white-right"></i>';
         nextNumEl = createElement('span', { class: 'superlist-prenext-num next-num' });
+        nextNumEl.innerHTML = 'Next';
         nextEl.appendChild(nextNumEl);
 
         nextEl.addEventListener('click', navToNextItem, false);
