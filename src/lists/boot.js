@@ -355,7 +355,7 @@
     }
 
     function modifyHeading(heading) {
-        heading.el.classList.add('superlist-item');
+        heading.el.setAttribute('class', heading.el.getAttribute('class') + 'superlist-item');
         heading.el.innerHTML = '';
         
         var numEl = document.createElement('span');
