@@ -50,6 +50,7 @@
     var previousValue = false;
     var colours = {};
     var currentChapterIndex = 0;
+    var cssText = '';
 
     // Match: 1. Heading | sub heading
     var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
@@ -145,10 +146,13 @@
 
     function createElement(elmName, attributes) {
         var elm = document.createElement(elmName);
-        Object.keys(attributes)
-            .forEach(function(key) {
-                elm.setAttribute(key, attributes[key]);
-            });
+        if (attributes) {
+            Object.keys(attributes)
+                .forEach(function(key) {
+                    elm.setAttribute(key, attributes[key]);
+                });
+        }
+
         return elm;
     }
 
@@ -215,19 +219,27 @@
     }
 
     function createListItemEl(heading, i) {
-        var navListItem = document.createElement('li');
-        navListItem.addEventListener('mouseover', navItemMouseOver, false);
-        navListItem.addEventListener('mouseout', navItemMouseOut, false);
+        var navListItem = createElement('li', { class: 'superlist-item' });
         navListItem.addEventListener('click', navToHeading, false);
         navListItem.setAttribute('data-id', i);
         
         heading.el.setAttribute('id', 'nav' + i);
         heading.el.setAttribute('name', 'nav' + i);
 
-        var navLink = document.createElement('a');
+        var navLink = createElement('a', { class: 'superlist-item-link' });
         navLink.href = '#' + heading.el.getAttribute('id');
-        navLink.innerHTML = heading.title + ' - ' + heading.subTitle;
+
+        var linkTitleEl = createElement('span', { class: 'superlist-link-title' });
+        linkTitleEl.innerHTML = heading.title.trim();
+        
+        var linkSubTitleEl = createElement('span', { class: 'superlist-link-subtitle' });
+        linkSubTitleEl.innerHTML = heading.subTitle.trim();
+
+        navLink.appendChild(linkTitleEl);
+        navLink.appendChild(linkSubTitleEl);
+
         navLink.setAttribute('data-title', (i + 1) + '. ' + heading.title);
+        navLink.setAttribute('data-num', heading.num);
         //navLink.addEventListener('click', jumpToHeading, false);
         navListItem.appendChild(navLink);
 
@@ -252,12 +264,12 @@
         articleBodyEl = document.querySelector('.content__article-body');
         h2s = document.querySelectorAll('.content__article-body h2');
         navEl = createElement('div', { class: 'article_nav noselect', id: 'article-navigation' });
-        navEl.style.backgroundColor = colours.header; 
-        navEl.style.borderColor = colours.stand; 
+        updateCSSText('.article_nav.active', 'background', colours.header);
+        updateCSSText('.article_nav.active', 'border-color', colours.stand);
 
         var sectionText = getPageElementText('sectionName');
         var navSectionEl = createElement('span', { class: 'superlist-nav-section'});
-        navSectionEl.style.color = colours.section;
+        updateCSSText('.superlist-nav-section', 'color', colours.section);
         navSectionEl.innerHTML = sectionText; 
         navEl.appendChild(navSectionEl);
         
@@ -271,7 +283,7 @@
 
         headings = Array.prototype.map.call(h2s, getHeadingParts); 
 
-        var navList = document.createElement('ol');
+        var navList = createElement('ol', { class: 'superlist-list' });
         Array.prototype.map.call(headings, function(heading, i) {
             if (!heading) {
                 return;
@@ -281,6 +293,8 @@
             var liEl = createListItemEl(heading, i);
             navList.appendChild(liEl);
         });
+
+        updateCSSText('.active.article_nav li:hover', 'background-color', colours.stand);
 
         navEl.appendChild(navList);
         navEl.addEventListener('click', handleNavClick, false);
@@ -296,28 +310,18 @@
         // Add menu button
         var menuEl = createElement('div', { class: 'menu' });
         var hamEl = createElement('div', { class: 'menu-ham' });
-        hamEl.style.borderColor = colours.header;
+        updateCSSText('.menu-ham', 'border-color', colours.header);
         menuEl.appendChild(hamEl);
-        menuEl.style.backgroundColor = colours.section;
+        updateCSSText('.article_nav.active .menu', 'background-color', colours.section);
         navEl.appendChild(menuEl);
     
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
         }
-    }
 
-    function navItemMouseOver(event) {
-        var el = event.currentTarget;
-        el.style.backgroundColor = colours.stand;
-        //el.style.color = colours.header;
+        var styleEl = addCSSElement();
+        document.querySelector('head').appendChild(styleEl);
     }
-
-    function navItemMouseOut(event) {
-        var el = event.currentTarget;
-        el.style.backgroundColor = 'transparent';
-        el.style.color = '#FFF';
-    }
-
 
     function handleNavClick() {
         if (navEl.className.indexOf('active') === -1) {
@@ -386,6 +390,21 @@
         }
 
         return nearestIndex;
+    }
+
+    function updateCSSText(selector, attribute, value) {
+        cssText += selector + '{' + attribute + ':' + value + ';}';
+    }
+
+    function addCSSElement() {
+        var styleEl = createElement('style');
+        styleEl.type = 'text/css';
+        if (styleEl.styleSheet){
+          styleEl.styleSheet.cssText = cssText;
+        } else {
+          styleEl.appendChild(document.createTextNode(cssText));
+        }
+        return styleEl;
     }
 
     function boot(el) {
