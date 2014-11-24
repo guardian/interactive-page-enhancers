@@ -206,7 +206,7 @@
     float: left;
     overflow: hidden;
     position: absolute;
-    top: 9px;
+    top: 8px;
     right: 50px;
 }
 
@@ -254,11 +254,11 @@
 }
 
 h2.superlist-nav-headline {
-    /* margin-top: -2em; */
     float: left;
     font-weight: 300;
     font-size: 1em;
     color: #FFF;
+    white-space: nowrap;
 }
 
 

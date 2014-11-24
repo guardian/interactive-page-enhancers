@@ -1,4 +1,4 @@
-define([], function() {
+    define([], function() {
     'use strict';
 
     // Underscore's throttle.
@@ -172,6 +172,7 @@ define([], function() {
         e.stopPropagation();
         if (currentChapterIndex < headings.length - 1) {
             jumpToHeading(headings[currentChapterIndex + 1].el);
+            closeNav();
         }
     }
 
@@ -179,6 +180,7 @@ define([], function() {
         e.stopPropagation();
         if (currentChapterIndex > 0) {
             jumpToHeading(headings[currentChapterIndex - 1].el);
+            closeNav();
         }
     }
 
@@ -327,6 +329,10 @@ define([], function() {
         } else {
             navEl.className = navEl.className.replace('openNav', '');
         }
+    }
+
+    function closeNav() {
+        navEl.className = navEl.className.replace('openNav', '');
     }
 
     function getHeadingParts(el) {
