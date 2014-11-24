@@ -13,7 +13,7 @@
     color: #333;
 }
 
-.article_nav h2 {
+.article_nav .margin {
     margin-bottom: 5px;
 }
 .article_nav ol {
@@ -30,7 +30,6 @@
     top: 0;
     overflow: hidden;
     box-sizing: border-box;
-    height: 0;
     /* padding: 40px 0 0 10px; */
 
     -webkit-transition: top 200ms cubic-bezier(.17, .04, .03, .94);
@@ -45,16 +44,13 @@
     height: 43px;
 }
 
-.article_nav.active h2 {
-    //display: none;
-}
 
 @media (max-width: 46.25em) {
     .article_nav.active {
         left: 0;
     }
 
-    h2.superlist-nav-headline {
+    .article_nav .superlist-nav-headline {
         visibility: hidden;
     }
 
@@ -70,10 +66,6 @@
     border-right: 1px solid #dcdcdc;
     border-bottom: 3px solid #4bc6df;
     border-left: 1px solid #dcdcdc;
-}
-
-.article_nav.active a {
-    /* color: black; */
 }
 
 .active-link {
@@ -126,15 +118,15 @@
     border-bottom: .125em solid #000;
 }
 
-.article_nav ol {
+.active.article_nav ol {
     list-style-type: none;
 }
 
-.article_nav li {
+.active.article_nav li {
     counter-increment: item;
-    display: inline-block;
+    display: block;
     float: left;
-    counter-increment: item;
+    border: 1px solid #FFF;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     width: 1.7em;
@@ -145,7 +137,7 @@
     color: #FFF;
 }
 
-.article_nav li a {
+.active.article_nav li a {
     display: none;
 }
 
@@ -153,35 +145,15 @@
     content: counter(item) "  "; 
 }
 
-@media(min-width:480px) {
-    .article_nav ol {
-                column-count: 2;
-        -webkit-column-count: 2;
-           -moz-column-count: 2;
-                column-gap: 0;
-        -webkit-column-gap: 0;
-           -moz-column-gap: 0;
-    }
-    .article_nav ol li {
-        font-size: 16px;
 
-        -webkit-column-break-inside: avoid;
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-}
-
-
-
-.superlist-item {
+.active .superlist-item {
     overflow: hidden;
     border-top: 1px solid rgb(239, 239, 239);
     padding-top: 4px;
 }
 
 
-.superlist-number {
+.active .superlist-number {
     float: left;
     display: block;
     color: #979797;
@@ -191,11 +163,11 @@
     line-height: 1em;
 }
 
-.superlist-title {
+.active .superlist-title {
     display: block;
 }
 
-.superlist-subtitle {
+.active .superlist-subtitle {
     display: block;
     font-weight: 300;
     color: #828282;
@@ -203,6 +175,10 @@
 }
 
 .superlist-prenext-wrapper {
+    display: none;
+}
+.active .superlist-prenext-wrapper {
+    display: block;
     float: left;
     overflow: hidden;
     position: absolute;
@@ -210,7 +186,8 @@
     right: 50px;
 }
 
-.superlist-prenext-btn {
+.active .superlist-prenext-btn {
+    border: 1px solid #FFF; 
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20%/50%;
     width: 4em;
@@ -220,14 +197,14 @@
     position: relative;
 }
 
-.superlist-prenext-btn .i-arrow-white-right {
+.active .superlist-prenext-btn .i-arrow-white-right {
     height: 23px;
     width: 23px;
     position: absolute;
     right: 0;
 }
 
-.superlist-prenext-btn .i-arrow-white-left {
+.active .superlist-prenext-btn .i-arrow-white-left {
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
@@ -237,32 +214,33 @@
     left: 0;
 }
 
-.superlist-prenext-num {
+.active .superlist-prenext-num {
     line-height: 1.5em;
     display: inline-block;
     color: #FFF;
     margin: 0 0 0 21px;
 }
 
-.superlist-prenext-num.next-num {
+.active .superlist-prenext-num.next-num {
     margin: 0 0 0 7px;
 }
 
 
-.superlist-prenext-btn.superlist-prenext-pre {
+.active .superlist-prenext-btn.superlist-prenext-pre {
     margin-right: 5px;
 }
 
-h2.superlist-nav-headline {
+.article_nav.active .superlist-nav-headline {
     float: left;
     font-weight: 300;
     font-size: 1em;
     color: #FFF;
     white-space: nowrap;
+    margin-bottom: 0.6em;
 }
 
 
-.superlist-nav-headline .superlist-nav-section {
+.active .superlist-nav-headline .superlist-nav-section {
     display: inline-block;
     font-weight: 700;
     padding-right: 10px;
