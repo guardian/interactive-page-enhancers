@@ -230,6 +230,7 @@
         var navListItem = createElement('li', { class: 'superlist-item' });
         navListItem.addEventListener('click', navToHeading, false);
         navListItem.setAttribute('data-id', i);
+        navListItem.setAttribute('data-num', heading.num);
         
         heading.el.setAttribute('id', 'nav' + i);
         heading.el.setAttribute('name', 'nav' + i);
@@ -255,14 +256,22 @@
     }
 
     function getColours() {
-        var headerEl = document.querySelector('.tonal__header');
-        colours.header = getCSSValue(headerEl, 'background-color') || '#CCC';
+        colours.header = '#005689';
+        colours.stand = '#00456e';
+        colours.section = '#FFF';
 
-        var standEl = document.querySelector('.tonal__standfirst');
-        colours.stand = getCSSValue(standEl, 'background-color') || '#EEE';
+        // Check if there are section colours (News doesn't)
+        var sectionHeader = document.querySelector('.tonal__head--tone-news');
+        if (!sectionHeader) {
+            var sectionEl = document.querySelector('.content__section-label__link');
+            colours.section =  getCSSValue(sectionEl, 'color') || colours.section;
 
-        var sectionEl = document.querySelector('.content__section-label__link');
-        colours.section =  getCSSValue(sectionEl, 'color') || '#666';
+            var headerEl = document.querySelector('.tonal__header');
+            colours.header = getCSSValue(headerEl, 'background-color') || colours.header;
+
+            var standEl = document.querySelector('.tonal__standfirst');
+            colours.stand = getCSSValue(standEl, 'background-color') || colours.stand;
+        }
 
         return colours;
     }
@@ -282,6 +291,9 @@
 
         // First h2 is used to determine if list is numbered or not
         isNumberedList = testElmTestStartsWithNumber(h2s[0]);
+        if (isNumberedList) {
+            navEl.setAttribute('class', navEl.getAttribute('class') + ' numberedlist');
+        }
 
         var sectionText = getPageElementText('sectionName');
         var navSectionEl = createElement('span', { class: 'superlist-nav-section'});

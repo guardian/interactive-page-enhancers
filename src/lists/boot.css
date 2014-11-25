@@ -58,6 +58,7 @@
     left: 0;
 }
 
+
 .superlist-link-title {
     font-weight: 700;
 }
@@ -167,7 +168,10 @@
 }
 
 .active.article_nav .superlist-item:before {
-    content: counter(item) "  "; 
+    content: counter(item) "  ";
+}
+.numberedlist.active.article_nav .superlist-item:before {
+    content: attr(data-num);
 }
 
 
