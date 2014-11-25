@@ -21,6 +21,14 @@
     margin-bottom: 0;
     list-style-type: none;
 }
+.article_nav .superlist-list.hidden-nav {
+    display: none;
+}
+.active.article_nav .superlist-list.hidden-nav {
+    display: block;
+}
+
+
 .article_nav .superlist-item {
     font-size: 14px;
     font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
@@ -33,6 +41,11 @@
     background-color: rgba(51,51,51,0.05);
 }
 
+.superlist-heading-item {
+    border-top: 1px solid rgb(244, 244, 244);
+    border-top: 1px solid rgba(51,51,51,0.05);
+    padding: 0.1em 0 0.3em 0;
+}
 
 .superlist-item-link:before {
     content: attr(data-num);
@@ -95,23 +108,6 @@
     height: auto;
     padding-bottom: 10px;
     border-bottom-width: 3px;
-}
-
-.active-link {
-    font-weight: bold;
-}
-
-.active .active-link::before {
-    position: absolute;
-    top: 9px;
-    left: 10px;
-    overflow: hidden;
-    width: 90%;
-    max-width: 380px;
-    content: attr(data-title);
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .article_nav .menu {

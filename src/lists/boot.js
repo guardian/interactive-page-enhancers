@@ -38,7 +38,7 @@
     var throttledScroll = throttle(onScroll, 300);
     var throttledResize = throttle(onResize, 300);
     var linksEl;
-    var liEls;
+    var liEls = [];
     var headingsEls;
     var wrapperEl;
     var navEl;
@@ -89,17 +89,23 @@
             navEl.style.width = 'auto';
         }
 
-        var headingLinks = figureEl.querySelectorAll('a');
-        for(var i = 0; i < headingLinks.length; i++) {
-            headingLinks[i].className = headingLinks[i].className.replace('active-link','');
-        }
 
-        var currentChapter = headingLinks[getNearestTopIndex()];
-        currentChapterIndex = getNearestTopIndex();
-        //updateNav();
+        var newChapterIndex = getNearestTopIndex();
 
-        if (currentChapter) {
-            currentChapter.className += 'active-link';
+        if (newChapterIndex !== null && currentChapterIndex !== newChapterIndex) {
+            currentChapterIndex = newChapterIndex;
+
+            // Remove active class from previous item
+            var activeLink = document.querySelector('.active-link');
+            if (activeLink) {
+                activeLink.className = activeLink.className.replace(/\W+active-link/,'');
+            }
+
+            var chapterLinkEl = liEls[currentChapterIndex]; 
+            if (chapterLinkEl) {
+                chapterLinkEl.className += ' active-link';
+            }
+            //updateNav();
         }
     }
 
@@ -261,6 +267,11 @@
         return colours;
     }
 
+    function testElmTestStartsWithNumber(el) {
+        var text = (el.innerText || el.textContent);
+        return NUMBER_START_REGEX.test(text);
+    }
+
     function setupDOM() {
         mainBodyEl = document.querySelector('.content__main-column.content__main-column--article');
         articleBodyEl = document.querySelector('.content__article-body');
@@ -268,6 +279,9 @@
         navEl = createElement('div', { class: 'article_nav noselect', id: 'article-navigation' });
         updateCSSText('.article_nav.active', 'background', colours.header);
         updateCSSText('.article_nav.active', 'border-color', colours.stand);
+
+        // First h2 is used to determine if list is numbered or not
+        isNumberedList = testElmTestStartsWithNumber(h2s[0]);
 
         var sectionText = getPageElementText('sectionName');
         var navSectionEl = createElement('span', { class: 'superlist-nav-section'});
@@ -294,7 +308,13 @@
             modifyHeading(heading);
             var liEl = createListItemEl(heading, i);
             navList.appendChild(liEl);
+            liEls.push(liEl);
         });
+
+        // Only show top mini-list if the list is numbered
+        if (!isNumberedList) {
+            navList.setAttribute('class', navList.getAttribute('class') + ' hidden-nav');
+        }
 
         updateCSSText('.active.article_nav li:hover', 'background-color', colours.stand);
 
@@ -320,7 +340,12 @@
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
         }
+        
+        // Set active link colours
+        updateCSSText('.active.article_nav .superlist-item.active-link', 'background-color', colours.section);
+        updateCSSText('.active.article_nav .superlist-item.active-link', 'color', colours.header);
 
+        // Add CSS style elm
         var styleEl = addCSSElement();
         document.querySelector('head').appendChild(styleEl);
     }
@@ -342,50 +367,55 @@
     }
 
     function getHeadingParts(el) {
+        var num;
+        var title;
+        var subTitle;
         var text = (el.innerText || el.textContent);
+
         if (!text) {
             console.log('GUI: Heading did not match pattern', el);
             return false;
+        } else if (isNumberedList) {
+            num = text.match(/^(\d+)(?=.)/i);
+            title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i);
+            subTitle = text.match(/\|\W*(.+)\W*$/i);
+        } else {
+            title = text.match(/^([^\|]+)/i);
+            subTitle = text.match(/(?:\|)(.+)$/i);
         }
 
-        if (LIST_HEADING_REGEX.test(text)) {
-            var num = text.match(/^(\d+)(?=.)/i);
-            var title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i);
-            var subTitle = text.match(/\|\W*(.+)\W*$/i);
-        }
-
-        if (!NUMBER_START_REGEX.test(text)) {
-            var title = text.match(/^([^\|]+)/i);
-            var subTitle = text.match(/(?:\|)(.+)$/i);
-        }
-
-            return {
-                num: (num) ? num[1].trim() : null, 
-                title: (title) ? title[1].trim() : null,
-                subTitle: (subTitle) ? subTitle[1].trim() : null, 
-                el: el
-            };
-       
+        return {
+            num: (num) ? num[1].trim() : null, 
+            title: (title) ? title[1].trim() : null,
+            subTitle: (subTitle) ? subTitle[1].trim() : null, 
+            el: el
+        };
     }
 
     function modifyHeading(heading) {
-        heading.el.setAttribute('class', heading.el.getAttribute('class') + 'superlist-item');
+        heading.el.setAttribute('class', heading.el.getAttribute('class') + ' superlist-heading-item');
         heading.el.innerHTML = '';
-        
-        var numEl = document.createElement('span');
-        numEl.setAttribute('class', 'superlist-number');
-        numEl.innerHTML = heading.num;
-        heading.el.appendChild(numEl);
 
-        var titleEl = document.createElement('span');
-        titleEl.setAttribute('class', 'superlist-title');
-        titleEl.innerHTML = heading.title;
-        heading.el.appendChild(titleEl);
+        if (isNumberedList) {
+            var numEl = document.createElement('span');
+            numEl.setAttribute('class', 'superlist-number');
+            numEl.innerHTML = heading.num;
+            heading.el.appendChild(numEl);
+        }
 
-        var subTitleEl = document.createElement('span');
-        subTitleEl.setAttribute('class', 'superlist-subtitle');
-        subTitleEl.innerHTML = heading.subTitle;
-        heading.el.appendChild(subTitleEl);
+        if (heading.title) {
+            var titleEl = document.createElement('span');
+            titleEl.setAttribute('class', 'superlist-title');
+            titleEl.innerHTML = heading.title;
+            heading.el.appendChild(titleEl);
+        }
+
+        if (heading.subTitle) {
+            var subTitleEl = document.createElement('span');
+            subTitleEl.setAttribute('class', 'superlist-subtitle');
+            subTitleEl.innerHTML = heading.subTitle;
+            heading.el.appendChild(subTitleEl);
+        }
     }
 
     // TODO: Better way to determine top
