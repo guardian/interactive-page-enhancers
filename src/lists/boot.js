@@ -393,7 +393,7 @@
                 return;
             }
 
-            modifyHeading(heading);
+            modifyHeading(heading, i);
             var liEl = createListItemEl(heading, i);
             navList.appendChild(liEl);
             liEls.push(liEl);
@@ -480,7 +480,7 @@
         };
     }
 
-    function modifyHeading(heading) {
+    function modifyHeading(heading, i) {
         heading.el.setAttribute('class', heading.el.getAttribute('class') + ' superlist-heading-item');
         heading.el.innerHTML = '';
 

@@ -63,6 +63,15 @@
     top: 0;
 }
 
+.social-buttons {
+    overflow: hidden;
+}
+
+.superlist-heading-item .hide-on-mobile {
+    /* display: block !important;
+    position: relative; */
+}
+
 .superlist-link-title {
     font-weight: 700;
 }
