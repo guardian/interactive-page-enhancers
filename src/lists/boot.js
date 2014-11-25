@@ -1,6 +1,14 @@
     define([], function() {
     'use strict';
 
+    // http://stackoverflow.com/a/901144
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
     // Underscore's throttle.
     var throttle = function(func, wait, options) {
         var context, args, result;
@@ -232,8 +240,9 @@
         navListItem.setAttribute('data-id', i);
         navListItem.setAttribute('data-num', heading.num);
         
-        heading.el.setAttribute('id', 'nav' + i);
-        heading.el.setAttribute('name', 'nav' + i);
+        heading.el.setAttribute('id', 'nav' + (i + 1));
+        heading.el.setAttribute('name', 'nav' + (i + 1));
+        heading.el.appendChild(getSocialLinks('nav' + (i + 1)));
 
         var navLink = createElement('a', { class: 'superlist-item-link' });
         navLink.href = '#' + heading.el.getAttribute('id');
@@ -253,6 +262,61 @@
         navListItem.appendChild(navLink);
 
         return navListItem;
+    }
+    
+    function getSocialImage() {
+        var imgSrc;
+        var metas = document.querySelectorAll('meta');
+        var ogImageMeta = Array.prototype.filter.call(metas, function(meta) {
+            return meta.getAttribute('property') === 'og:image';
+        });
+
+        if (ogImageMeta.length > 0) {
+            imgSrc = ogImageMeta[0].getAttribute('content');
+        }
+
+        return imgSrc;
+    }
+
+    function getSocialData(numID) {
+        var config = {};
+
+        if (window.guardian) {
+            config.title = window.guardian.config.page.webTitle;
+            config.url = 'http://theguardian.com/' + window.guardian.config.page.pageId;
+            config.shortUrl = window.guardian.config.page.shortUrl;
+        } else {
+            var el = document.querySelector('.content__headline');
+            config.url = document.location.href.match(/([^#]+)/)[1];
+            config.title = (el.innerText || el.textContent);
+            config.shortUrl = config.url;
+        }
+
+        // Add hash if one was passed in
+        if (numID) {
+            config.url += ('?item=' + numID);
+            config.shortUrl += ('?item=' + numID);
+        }
+
+        config.imgSrc = getSocialImage();
+        return config;
+    }
+
+    function getTwitterLink(config) {
+       var baseURL = 'https://twitter.com/intent/tweet?text=';
+       return baseURL + encodeURIComponent(config.title + ' ' + config.shortUrl);
+    }
+    
+    function getFacebookLink(config) {
+        var baseURL = 'https://www.facebook.com/sharer/sharer.php?u=';
+        return baseURL + encodeURIComponent(config.url);
+    }
+
+    function getPintrestLink(config) {
+        var baseURL = 'http://www.pinterest.com/pin/create/button/?description={{desc}}&amp;url={{url}}&amp;media={{media}}';
+        var newURL = baseURL.replace('{{desc}}', encodeURIComponent(config.title));
+        newURL = newURL.replace('{{url}}', encodeURIComponent(config.url));
+        return newURL.replace('{{media}}', encodeURIComponent(config.imgSrc));
     }
 
     function getColours() {
@@ -279,6 +343,18 @@
     function testElmTestStartsWithNumber(el) {
         var text = (el.innerText || el.textContent);
         return NUMBER_START_REGEX.test(text);
+    }
+
+
+    function getSocialLinks(numID) {
+        var HTML = '<div class="block-share block-share--article hide-on-mobile" data-link-name="block share"><a class="block-share__link js-blockshare-link" href="{{facebook}}" target="_blank" data-link-name="social facebook"><div class="block-share__item block-share__item--facebook"><i class="i"></i><span class="u-h">Facebook</span></div> </a><a class="block-share__link js-blockshare-link" href="{{twitter}}" target="_blank" data-link-name="social twitter"><div class="block-share__item block-share__item--twitter"><i class="i"></i><span class="u-h">Twitter</span></div> </a><a class="block-share__link js-blockshare-link" href="{{pintrest}}" target="_blank" data-link-name="social pinterest"><div class="block-share__item block-share__item--pinterest"><i class="i"></i><span class="u-h">Pinterest</span></div> </a><button class="meta-button block-share__item block-share__item--expand js-blockshare-expand u-h" data-link-name="expand"> <i class="i i-ellipsis-black"></i> <span class="u-h">expand</span> </button></div>';
+        var config = getSocialData(numID);
+        var domEl = createElement('div', { class: 'social-buttons' });
+        var newHTML = HTML.replace('{{twitter}}', getTwitterLink(config));
+        newHTML = newHTML.replace('{{facebook}}', getFacebookLink(config));
+        newHTML = newHTML.replace('{{pintrest}}', getPintrestLink(config));
+        domEl.innerHTML = newHTML;
+        return domEl;
     }
 
     function setupDOM() {
@@ -428,6 +504,7 @@
             subTitleEl.innerHTML = heading.subTitle;
             heading.el.appendChild(subTitleEl);
         }
+
     }
 
     // TODO: Better way to determine top
@@ -463,6 +540,18 @@
         return styleEl;
     }
 
+    function jumpToSharedItem() {
+        var sharedItem = getParameterByName('item');
+        if (sharedItem) {
+            var headingEl = document.querySelector('#'+sharedItem);
+            if (headingEl) {
+                setTimeout(function() {
+                    jumpToHeading(headingEl);
+                }, 300);
+            }
+        }
+    }
+
     function boot(el) {
         figureEl = el;
         getColours();
@@ -470,6 +559,7 @@
         setupDOM();
         throttledScroll();
         throttledResize();
+        jumpToSharedItem();
         window.addEventListener('scroll', throttledScroll);
         window.addEventListener('resize', throttledResize);
     }
