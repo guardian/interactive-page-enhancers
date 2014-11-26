@@ -189,6 +189,7 @@
     }
 
     function navToNextItem(e) {
+        e.preventDefault();
         e.stopPropagation();
         if (currentChapterIndex < headings.length - 1) {
             jumpToHeading(headings[currentChapterIndex + 1].el);
@@ -197,6 +198,7 @@
     }
 
     function navToPreviousItem(e) {
+        e.preventDefault();
         e.stopPropagation();
         if (currentChapterIndex > 0) {
             jumpToHeading(headings[currentChapterIndex - 1].el);
@@ -264,7 +266,9 @@
         }
 
         var navLink = createElement('a', { class: 'superlist-item-link' });
-        navLink.href = '#' + heading.el.getAttribute('id');
+        //navLink.href = '#' + heading.el.getAttribute('id');
+        navLink.setAttribute('data-id', i);
+        navLink.addEventListener('click', navToHeading, false);
 
         var linkTitleEl = createElement('span', { class: 'superlist-link-title' });
         linkTitleEl.innerHTML = heading.title;
