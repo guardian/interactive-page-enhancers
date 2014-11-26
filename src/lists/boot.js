@@ -239,10 +239,29 @@
         navListItem.addEventListener('click', navToHeading, false);
         navListItem.setAttribute('data-id', i);
         navListItem.setAttribute('data-num', heading.num);
+
+        var id = 'nav' + (heading.num || i + 1);
         
-        heading.el.setAttribute('id', 'nav' + (i + 1));
-        heading.el.setAttribute('name', 'nav' + (i + 1));
-        heading.el.appendChild(getSocialLinks('nav' + (i + 1)));
+        heading.el.setAttribute('id', id);
+        heading.el.setAttribute('name', id);
+        heading.el.insertBefore(
+            getSocialLinks(id),
+            heading.el.firstChild
+        );
+
+        // HACK. On mobile social bottons are at the bottom of the list item
+        if (i > 0) {
+            var prevID = 'nav' + (headings[i - 1].num || i);
+            headings[i].el.parentNode.insertBefore(
+                getSocialLinks(prevID),
+                headings[i].el
+            );
+        }
+
+        // Add last item's mobile buttons to the end of the article body
+        if (i === headings.length - 1) {
+            articleBodyEl.appendChild(getSocialLinks(id));
+        }
 
         var navLink = createElement('a', { class: 'superlist-item-link' });
         navLink.href = '#' + heading.el.getAttribute('id');
@@ -347,7 +366,7 @@
 
 
     function getSocialLinks(numID) {
-        var HTML = '<div class="block-share block-share--article hide-on-mobile" data-link-name="block share"><a class="block-share__link js-blockshare-link" href="{{facebook}}" target="_blank" data-link-name="social facebook"><div class="block-share__item block-share__item--facebook"><i class="i"></i><span class="u-h">Facebook</span></div> </a><a class="block-share__link js-blockshare-link" href="{{twitter}}" target="_blank" data-link-name="social twitter"><div class="block-share__item block-share__item--twitter"><i class="i"></i><span class="u-h">Twitter</span></div> </a><a class="block-share__link js-blockshare-link" href="{{pintrest}}" target="_blank" data-link-name="social pinterest"><div class="block-share__item block-share__item--pinterest"><i class="i"></i><span class="u-h">Pinterest</span></div> </a><button class="meta-button block-share__item block-share__item--expand js-blockshare-expand u-h" data-link-name="expand"> <i class="i i-ellipsis-black"></i> <span class="u-h">expand</span> </button></div>';
+        var HTML = '<div class="superlist-social block-share block-share--article" data-link-name="block share"><a class="block-share__link js-blockshare-link" href="{{facebook}}" target="_blank" data-link-name="social facebook"><div class="block-share__item block-share__item--facebook"><i class="i"></i><span class="u-h">Facebook</span></div> </a><a class="block-share__link js-blockshare-link" href="{{twitter}}" target="_blank" data-link-name="social twitter"><div class="block-share__item block-share__item--twitter"><i class="i"></i><span class="u-h">Twitter</span></div> </a><a class="block-share__link js-blockshare-link" href="{{pintrest}}" target="_blank" data-link-name="social pinterest"><div class="block-share__item block-share__item--pinterest"><i class="i"></i><span class="u-h">Pinterest</span></div> </a><button class="meta-button block-share__item block-share__item--expand js-blockshare-expand u-h" data-link-name="expand"> <i class="i i-ellipsis-black"></i> <span class="u-h">expand</span> </button></div>';
         var config = getSocialData(numID);
         var domEl = createElement('div', { class: 'social-buttons' });
         var newHTML = HTML.replace('{{twitter}}', getTwitterLink(config));
@@ -369,6 +388,7 @@
         isNumberedList = testElmTestStartsWithNumber(h2s[0]);
         if (isNumberedList) {
             navEl.setAttribute('class', navEl.getAttribute('class') + ' numberedlist');
+            mainBodyEl.setAttribute('class', mainBodyEl.getAttribute('class') + ' numberedlist');
         }
 
         var sectionText = getPageElementText('sectionName');

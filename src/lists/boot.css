@@ -42,10 +42,11 @@
 }
 
 .superlist-heading-item {
-    border-top: 1px solid rgb(244, 244, 244);
-    border-top: 1px solid rgba(51,51,51,0.05);
-    padding: 0.1em 0 0.3em 0;
+    border-top: 1px dotted #dcdcdc;
+    padding: 0.1em 0 0 0;
     position: relative;
+    overflow: hidden;
+    margin-bottom: .5em !important;
 }
 
 .superlist-item-link:before {
@@ -60,16 +61,27 @@
 }
 
 .superlist-heading-item .block-share {
-    top: 0;
+    margin-top: 0;
 }
 
-.social-buttons {
+
+.superlist-social {
+    position: relative;
     overflow: hidden;
+    margin-bottom: 1.5em;
+    margin-left: -5px;
+}
+
+.superlist-heading-item .social-buttons {
+    overflow: hidden;
+    float: right;
 }
 
 .superlist-heading-item .hide-on-mobile {
-    /* display: block !important;
-    position: relative; */
+    display: block !important;
+}
+.superlist-heading-item .block-share__link {
+    display: block;
 }
 
 .superlist-link-title {
@@ -117,6 +129,39 @@
     }
 }
 
+
+
+@media all and (min-width: 30em) {
+    .social-buttons {
+        display: none !important;
+    }
+    
+    .superlist-heading-item .social-buttons {
+        display: block !important;
+    }
+
+
+}
+
+@media all and (max-width: 30em) {
+    .superlist-heading-item .social-buttons {
+        display: none !important;
+    }
+
+    .superlist-heading-item .block-share__link {
+        float: none;
+    }
+
+    .superlist-heading-item .hide-on-mobile {
+        margin: 0;
+    }
+
+
+    .superlist-heading-item .superlist-title,
+    .superlist-heading-item .superlist-subtitle {
+        margin-right: 0 !important;
+    }
+}
 
 .article_nav.active.openNav {
     height: auto;
@@ -199,21 +244,30 @@
     float: left;
     display: block;
     color: #979797;
-    font-size: 3em;
+    font-size: 48px;
     font-weight: 300;
-    margin: 0 30px 10px 0;
+    margin: 0;
     line-height: 1em;
+    width: 80px;
 }
 
 .superlist-title {
     display: block;
+    margin: 0 90px 0 0;
 }
+.numberedlist .superlist-title,
+.numberedlist .superlist-subtitle {
+    margin: 0 90px 0 80px;
+}
+
 
 .superlist-subtitle {
     display: block;
-    font-weight: 300;
+    margin: 0 90px 0 0;
     color: #828282;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-family: "Guardian Text Egyptian Web",Georgia,serif;
+    font-weight: 400; 
 }
 
 .superlist-prenext-wrapper {
@@ -261,6 +315,7 @@
     display: inline-block;
     color: #FFF;
     margin: 0 0 0 21px;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
 .active .superlist-prenext-num.next-num {
