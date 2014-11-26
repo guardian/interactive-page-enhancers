@@ -39,7 +39,7 @@
             return result;
         };
       };
-    
+
     var articleBodyEl;
     var mainBodyEl;
     var figureEl;
@@ -109,7 +109,7 @@
                 activeLink.className = activeLink.className.replace(/\W+active-link/,'');
             }
 
-            var chapterLinkEl = liEls[currentChapterIndex]; 
+            var chapterLinkEl = liEls[currentChapterIndex];
             if (chapterLinkEl) {
                 chapterLinkEl.className += ' active-link';
             }
@@ -118,18 +118,18 @@
     }
 
     function updateNav() {
-        var preNum = (currentChapterIndex - 1 < 1) ? 1 : currentChapterIndex - 1; 
-        var nexNum = (currentChapterIndex - 1 < 1) ? 3 : currentChapterIndex + 1; 
+        var preNum = (currentChapterIndex - 1 < 1) ? 1 : currentChapterIndex - 1;
+        var nexNum = (currentChapterIndex - 1 < 1) ? 3 : currentChapterIndex + 1;
 
         preNumEl.innerHTML = preNum;
         nextNumEl.innerHTML = nexNum;
     }
 
     function isStaticNavOutOfView() {
-        return (wrapperEl.getBoundingClientRect().bottom < 0 && 
+        return (wrapperEl.getBoundingClientRect().bottom < 0 &&
                 mainBodyEl.getBoundingClientRect().bottom - window.innerHeight / 2 > 0);
     }
-    
+
     function addCSS(url) {
         var cssEl = document.createElement('link');
         cssEl.setAttribute('type', 'text/css');
@@ -153,7 +153,7 @@
         if (altData && altData.hasOwnProperty(elmName)) {
             text = altData[elmName];
         } else if (guardian && guardian.config.page.hasOwnProperty(elmName)) {
-            text = guardian.config.page[elmName];    
+            text = guardian.config.page[elmName];
         }
 
         return text;
@@ -184,7 +184,7 @@
         } catch(err) {
             return console.log('ERROR: parsing data-alt', err);
         }
-        
+
         return altData;
     }
 
@@ -223,7 +223,7 @@
         preEl.appendChild(preNumEl);
         preEl.addEventListener('click', navToPreviousItem, false);
         wrapperEl.appendChild(preEl);
-        
+
         var nextEl = createElement('div', { class: 'superlist-prenext-btn superlist-prenext-next' });
         nextEl.innerHTML = '<i class="i i-arrow-white-right"></i>';
         nextNumEl = createElement('span', { class: 'superlist-prenext-num next-num' });
@@ -232,7 +232,7 @@
 
         nextEl.addEventListener('click', navToNextItem, false);
         wrapperEl.appendChild(nextEl);
-        
+
         return wrapperEl;
     }
 
@@ -243,7 +243,7 @@
         navListItem.setAttribute('data-num', heading.num);
 
         var id = 'nav' + (heading.num || i + 1);
-        
+
         heading.el.setAttribute('id', id);
         heading.el.setAttribute('name', id);
         heading.el.insertBefore(
@@ -272,7 +272,7 @@
 
         var linkTitleEl = createElement('span', { class: 'superlist-link-title' });
         linkTitleEl.innerHTML = heading.title;
-        
+
         var linkSubTitleEl = createElement('span', { class: 'superlist-link-subtitle' });
         linkSubTitleEl.innerHTML = heading.subTitle;
 
@@ -286,7 +286,7 @@
 
         return navListItem;
     }
-    
+
     function getSocialImage() {
         var imgSrc;
         var metas = document.querySelectorAll('meta');
@@ -329,7 +329,7 @@
        var baseURL = 'https://twitter.com/intent/tweet?text=';
        return baseURL + encodeURIComponent(config.title + ' ' + config.shortUrl);
     }
-    
+
     function getFacebookLink(config) {
         var baseURL = 'https://www.facebook.com/sharer/sharer.php?u=';
         return baseURL + encodeURIComponent(config.url);
@@ -340,6 +340,11 @@
         var newURL = baseURL.replace('{{desc}}', encodeURIComponent(config.title));
         newURL = newURL.replace('{{url}}', encodeURIComponent(config.url));
         return newURL.replace('{{media}}', encodeURIComponent(config.imgSrc));
+    }
+
+    function getGplusLink(config) {
+        var baseURL = 'https://plus.google.com/share?url={{url}}&amp;hl=en-GB&amp;wwc=1';
+        return baseURL.replace('{{url}}', encodeURIComponent(config.url));
     }
 
     function getColours() {
@@ -370,12 +375,13 @@
 
 
     function getSocialLinks(numID) {
-        var HTML = '<div class="superlist-social block-share block-share--article" data-link-name="block share"><a class="block-share__link js-blockshare-link" href="{{facebook}}" target="_blank" data-link-name="social facebook"><div class="block-share__item block-share__item--facebook"><i class="i"></i><span class="u-h">Facebook</span></div> </a><a class="block-share__link js-blockshare-link" href="{{twitter}}" target="_blank" data-link-name="social twitter"><div class="block-share__item block-share__item--twitter"><i class="i"></i><span class="u-h">Twitter</span></div> </a><a class="block-share__link js-blockshare-link" href="{{pintrest}}" target="_blank" data-link-name="social pinterest"><div class="block-share__item block-share__item--pinterest"><i class="i"></i><span class="u-h">Pinterest</span></div> </a><button class="meta-button block-share__item block-share__item--expand js-blockshare-expand u-h" data-link-name="expand"> <i class="i i-ellipsis-black"></i> <span class="u-h">expand</span> </button></div>';
+        var HTML = '<div class="superlist-social block-share block-share--article" data-link-name="block share">    <a class="block-share__link js-blockshare-link" href="{{facebook}}" target="_blank" data-link-name="social facebook">        <div class="block-share__item block-share__item--facebook"><i class="i"></i><span class="u-h">Facebook</span>        </div>    </a>    <a class="block-share__link js-blockshare-link" href="{{twitter}}" target="_blank" data-link-name="social twitter">        <div class="block-share__item block-share__item--twitter"><i class="i"></i><span class="u-h">Twitter</span>        </div>    </a>    <a class="block-share__link js-blockshare-link" href="{{gplus}}" target="_blank" data-link-name="social gplus">        <div class="block-share__item block-share__item--gplus"><i class="i"></i><span class="u-h">gplus</span>        </div>    </a>    <button class="meta-button block-share__item block-share__item--expand js-blockshare-expand u-h" data-link-name="expand"> <i class="i i-ellipsis-black"></i> <span class="u-h">expand</span> </button></div>';
         var config = getSocialData(numID);
         var domEl = createElement('div', { class: 'social-buttons' });
         var newHTML = HTML.replace('{{twitter}}', getTwitterLink(config));
         newHTML = newHTML.replace('{{facebook}}', getFacebookLink(config));
-        newHTML = newHTML.replace('{{pintrest}}', getPintrestLink(config));
+        newHTML = newHTML.replace('{{gplus}}', getGplusLink(config));
+        //newHTML = newHTML.replace('{{pintrest}}', getPintrestLink(config));
         domEl.innerHTML = newHTML;
         return domEl;
     }
@@ -398,18 +404,18 @@
         var sectionText = getPageElementText('sectionName');
         var navSectionEl = createElement('span', { class: 'superlist-nav-section'});
         updateCSSText('.superlist-nav-section', 'color', colours.section);
-        navSectionEl.innerHTML = sectionText; 
+        navSectionEl.innerHTML = sectionText;
         navEl.appendChild(navSectionEl);
-        
+
         var headlineText = getPageElementText('headline');
         var navHeadlineEl = createElement('h2', { class: 'superlist-nav-headline'});
-        
-        navHeadlineEl.appendChild(navSectionEl);
-        navHeadlineEl.appendChild(document.createTextNode( headlineText )); 
-        navEl.appendChild(navHeadlineEl);
-        navEl.appendChild(createPrevNextNav()); 
 
-        headings = Array.prototype.map.call(h2s, getHeadingParts); 
+        navHeadlineEl.appendChild(navSectionEl);
+        navHeadlineEl.appendChild(document.createTextNode( headlineText ));
+        navEl.appendChild(navHeadlineEl);
+        navEl.appendChild(createPrevNextNav());
+
+        headings = Array.prototype.map.call(h2s, getHeadingParts);
 
         var navList = createElement('ol', { class: 'superlist-list' });
         Array.prototype.map.call(headings, function(heading, i) {
@@ -440,7 +446,7 @@
         wrapperEl.appendChild(navEl);
         figureEl.innerHTML = '';
         articleBodyEl.insertBefore(wrapperEl, articleBodyEl.firstElementChild);
-        
+
         // Add menu button
         var menuEl = createElement('div', { class: 'menu' });
         var hamEl = createElement('div', { class: 'menu-ham' });
@@ -448,11 +454,11 @@
         menuEl.appendChild(hamEl);
         updateCSSText('.article_nav.active .menu', 'background-color', colours.section);
         navEl.appendChild(menuEl);
-    
+
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
         }
-        
+
         // Set active link colours
         updateCSSText('.active.article_nav .superlist-item.active-link', 'background-color', colours.section);
         updateCSSText('.active.article_nav .superlist-item.active-link', 'color', colours.header);
@@ -466,7 +472,7 @@
         if (navEl.className.indexOf('active') === -1) {
             return false;
         }
-        
+
         if (navEl.className.indexOf('openNav') === -1) {
             navEl.className += ' openNav';
         } else {
@@ -497,9 +503,9 @@
         }
 
         return {
-            num: (num) ? num[1].trim() : null, 
+            num: (num) ? num[1].trim() : null,
             title: (title) ? title[1].trim() : null,
-            subTitle: (subTitle) ? subTitle[1].trim() : null, 
+            subTitle: (subTitle) ? subTitle[1].trim() : null,
             el: el
         };
     }
@@ -579,7 +585,7 @@
     function boot(el) {
         figureEl = el;
         getColours();
-        getAltData(); 
+        getAltData();
         setupDOM();
         throttledScroll();
         throttledResize();
@@ -587,7 +593,7 @@
         window.addEventListener('scroll', throttledScroll);
         window.addEventListener('resize', throttledResize);
     }
-    
+
     return {
         boot: boot
     };
