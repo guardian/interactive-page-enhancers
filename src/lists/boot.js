@@ -61,9 +61,12 @@
     var cssText = '';
     var isNumberedList;
 
+
     // Match: 1. Heading | sub heading
     var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
     var NUMBER_START_REGEX = /^\W?\d+?\./;
+
+    var DEFAULT_CSS = 'http://interactive.guim.co.uk/page-enhancers/super-lists/boot.css';
 
     function resizeWrapper() {
         if (navEl.className.indexOf('active') === -1) {
@@ -457,6 +460,8 @@
 
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
+        } else {
+            addCSS(DEFAULT_CSS);
         }
 
         // Set active link colours

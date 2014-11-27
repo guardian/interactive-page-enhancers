@@ -47,6 +47,7 @@
     position: relative;
     overflow: hidden;
     margin-bottom: .5em !important;
+    clear: both;
 }
 
 .superlist-item-link:before {
