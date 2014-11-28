@@ -47,6 +47,7 @@
     position: relative;
     overflow: hidden;
     margin-bottom: .5em !important;
+    margin-top: 40px;
     clear: both;
 }
 
@@ -69,7 +70,6 @@
 .superlist-social {
     position: relative;
     overflow: hidden;
-    margin-bottom: 1.5em;
     margin-left: -5px;
 }
 
@@ -136,7 +136,7 @@
     .social-buttons {
         display: none !important;
     }
-    
+
     .superlist-heading-item .social-buttons {
         display: block !important;
     }
@@ -266,7 +266,7 @@
     color: #828282;
     font-size: 1rem;
     font-family: "Guardian Text Egyptian Web",Georgia,serif;
-    font-weight: 400; 
+    font-weight: 400;
 }
 
 .superlist-prenext-wrapper {
@@ -282,7 +282,7 @@
 }
 
 .active .superlist-prenext-btn {
-    border: 1px solid #FFF; 
+    border: 1px solid #FFF;
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20%/50%;
     width: 4em;

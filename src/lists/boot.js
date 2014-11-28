@@ -498,7 +498,12 @@
         if (!text) {
             console.log('GUI: Heading did not match pattern', el);
             return false;
-        } else if (isNumberedList) {
+        }
+
+        // Strip out whitspace and linebreaks
+        text = text.trim();
+
+        if (isNumberedList) {
             num = text.match(/^(\d+)(?=.)/i);
             title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i);
             subTitle = text.match(/\|\W*(.+)\W*$/i);
