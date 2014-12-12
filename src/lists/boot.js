@@ -275,12 +275,14 @@
 
         var linkTitleEl = createElement('span', { class: 'superlist-link-title' });
         linkTitleEl.innerHTML = heading.title;
-
-        var linkSubTitleEl = createElement('span', { class: 'superlist-link-subtitle' });
-        linkSubTitleEl.innerHTML = heading.subTitle;
-
         navLink.appendChild(linkTitleEl);
-        navLink.appendChild(linkSubTitleEl);
+
+        if (heading.subTitle) {
+            var linkSubTitleEl = createElement('span', { class: 'superlist-link-subtitle' });
+            linkSubTitleEl.innerHTML = heading.subTitle;
+            navLink.appendChild(linkSubTitleEl);
+        }
+
 
         navLink.setAttribute('data-title', (i + 1) + '. ' + heading.title);
         navLink.setAttribute('data-num', heading.num);
@@ -505,7 +507,7 @@
 
         if (isNumberedList) {
             num = text.match(/^(\d+)(?=.)/i);
-            title = text.match(/^\d+.\W*(.+)(?=\W*\|)/i);
+            title = text.match(/^\d+.\W*([^\|]+)/i);
             subTitle = text.match(/\|\W*(.+)\W*$/i);
         } else {
             title = text.match(/^([^\|]+)/i);
