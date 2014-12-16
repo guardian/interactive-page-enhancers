@@ -3,7 +3,7 @@
 }
 
 .active.article_nav {
-    padding: 10px 10px 5px;
+    padding: 8px 10px 6px;
 }
 
 .article_nav .superlist-item-link {
@@ -164,8 +164,8 @@
 
 .article_nav.active.openNav {
     height: auto;
-    padding-bottom: 10px;
-    border-bottom-width: 3px;
+    padding-bottom: 8px;
+    border-bottom-width: 2px;
 }
 
 .article_nav .menu {
@@ -284,9 +284,9 @@
 .active .superlist-prenext-btn {
     border: 1px solid #FFF;
     border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 20%/50%;
-    width: 4em;
-    line-height: 0.6em;
+    border-radius: 16px;
+    width: 3.5em;
+    line-height: 22px;
     cursor: pointer;
     float: left;
     position: relative;
@@ -310,7 +310,7 @@
 }
 
 .active .superlist-prenext-num {
-    line-height: 1.5em;
+    font-size: 13px;
     display: inline-block;
     color: #FFF;
     margin: 0 0 0 21px;
@@ -337,6 +337,20 @@
     color: #FFF;
     white-space: nowrap;
     margin-bottom: 0.6em;
+}
+
+@media (min-width: 30em) {
+    .article_nav.active .superlist-nav-headline {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 510px;
+    }
+}
+
+@media (min-width: 61.25em) {
+    .article_nav.active .superlist-nav-headline {
+        width: 430px;
+    }
 }
 
 
