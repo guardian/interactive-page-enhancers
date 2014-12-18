@@ -31,18 +31,26 @@ define([], function() {
             return result;
         };
       };
-    
+
+
+    var DEFAULT_CSS = 'http://interactive.guim.co.uk/page-enhancers/nav/boot.css';
+    var DEFAULT_INTRO_HEADING_TEXT = 'Introduction';
+
     var articleBodyEl;
     var mainBodyEl;
     var figureEl;
-    var throttledScroll = throttle(onScroll, 300);
-    var throttledResize = throttle(onResize, 300);
+    var introHeaderEl;
     var linksEl;
     var liEls;
     var headingsEls;
     var wrapperEl;
     var navEl;
     var h2s;
+
+    var altHeadings = [];
+
+    var throttledScroll = throttle(onScroll, 300);
+    var throttledResize = throttle(onResize, 300);
     var previousValue = false;
 
     function resizeWrapper() {
@@ -77,22 +85,24 @@ define([], function() {
             navEl.style.width = 'auto';
         }
 
-        var headingLinks = figureEl.querySelectorAll('a');
+        var headingLinks = figureEl.querySelectorAll('a,.intro_heading');
         for(var i = 0; i < headingLinks.length; i++) {
-            headingLinks[i].className = headingLinks[i].className.replace('active-link','');
+            headingLinks[i].className = headingLinks[i].className.replace(/\W*active-link/,'');
         }
 
         var currentChapter = headingLinks[getNearestTopIndex()];
         if (currentChapter) {
-            currentChapter.className += 'active-link';
+            currentChapter.className += ' active-link';
+        } else {
+            introHeaderEl.className += ' active-link';
         }
     }
 
     function isStaticNavOutOfView() {
-        return (wrapperEl.getBoundingClientRect().bottom < 0 && 
+        return (wrapperEl.getBoundingClientRect().bottom < 0 &&
                 mainBodyEl.getBoundingClientRect().bottom - window.innerHeight / 2 > 0);
     }
-    
+
     function addCSS(url) {
         var cssEl = document.createElement('link');
         cssEl.setAttribute('type', 'text/css');
@@ -121,6 +131,12 @@ define([], function() {
         navEl.setAttribute('id','article-navigation');
         navEl.className += ' article_nav';
 
+
+        introHeaderEl = document.createElement('div');
+        introHeaderEl.className += ' intro_heading';
+        introHeaderEl.innerHTML = DEFAULT_INTRO_HEADING_TEXT;
+        navEl.appendChild(introHeaderEl);
+
         var navigationTitle = document.createElement('h2');
         var altText = figureEl.getAttribute('data-alt');
         var altData;
@@ -131,20 +147,23 @@ define([], function() {
             console.log('ERROR: parsing data-alt', err);
         }
 
-        console.log(altData);
+        if (altData && altData.hasOwnProperty('headings')) {
+            altHeadings = altData.headings;
+        }
+
 
         if (altData && altData.hasOwnProperty('title')) {
-            navigationTitle.innerHTML = altData.title; 
+            navigationTitle.innerHTML = altData.title;
         } else {
-            navigationTitle.innerHTML = 'Navigation'; 
+            navigationTitle.innerHTML = 'Navigation';
         }
         navEl.appendChild(navigationTitle);
-        
 
-        var chapterNames = Array.prototype.map.call(h2s, function(el) {
-            return el.innerHTML;
-        }); 
-        
+
+        var chapterNames = Array.prototype.map.call(h2s, function(el, index) {
+            return (altHeadings[index]) ? altHeadings[index] : el.innerHTML;
+        });
+
         var navList = document.createElement('ol');
 
         // Add nav IDs to the <h2> headings
@@ -173,14 +192,19 @@ define([], function() {
         wrapperEl.appendChild(navEl);
         figureEl.innerHTML = '';
         figureEl.appendChild(wrapperEl);
-        
+
         // Add menu button
         var menuEl = document.createElement('div');
         menuEl.className +=  ' menu';
         navEl.appendChild(menuEl);
-    
+
+
+
+
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
+        } else {
+            addCSS(DEFAULT_CSS);
         }
     }
 
@@ -188,7 +212,7 @@ define([], function() {
         if (navEl.className.indexOf('active') === -1) {
             return false;
         }
-        
+
         if (navEl.className.indexOf('openNav') === -1) {
             navEl.className += ' openNav';
         } else {
@@ -222,7 +246,7 @@ define([], function() {
         window.addEventListener('scroll', throttledScroll);
         window.addEventListener('resize', throttledResize);
     }
-    
+
     return {
         boot: boot
     };

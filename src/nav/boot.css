@@ -74,7 +74,8 @@
     font-weight: bold;
 }
 
-.active .active-link::before {
+.active .active-link::before,
+.article_nav.active .intro_heading {
     position: absolute;
     top: 9px;
     left: 10px;
@@ -88,6 +89,15 @@
     cursor: pointer;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+
+.article_nav .intro_heading {
+    display: none;
+}
+
+.article_nav.active .intro_heading.active-link {
+    display: block;
 }
 
 .article_nav .menu {
@@ -118,6 +128,7 @@
     border-top: .375em double #000;
     border-bottom: .125em solid #000;
 }
+
 
 @media(min-width:480px) {
     .article_nav ol {
