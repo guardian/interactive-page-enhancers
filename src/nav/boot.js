@@ -155,7 +155,7 @@ define([], function() {
         if (altData && altData.hasOwnProperty('title')) {
             navigationTitle.innerHTML = altData.title;
         } else {
-            navigationTitle.innerHTML = 'Navigation';
+            navigationTitle.innerHTML = 'Contents';
         }
         navEl.appendChild(navigationTitle);
 
