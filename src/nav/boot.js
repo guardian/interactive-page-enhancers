@@ -90,6 +90,8 @@ define([], function() {
             headingLinks[i].className = headingLinks[i].className.replace(/\W*active-link/,'');
         }
 
+        // FIXME: Cache nav DOM links.
+        headingLinks = figureEl.querySelectorAll('a');
         var currentChapter = headingLinks[getNearestTopIndex()];
         if (currentChapter) {
             currentChapter.className += ' active-link';
