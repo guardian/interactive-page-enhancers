@@ -48,6 +48,7 @@ define([], function() {
     var h2s;
 
     var altHeadings = [];
+    var isNumbered = true;
 
     var throttledScroll = throttle(onScroll, 300);
     var throttledResize = throttle(onResize, 300);
@@ -153,6 +154,10 @@ define([], function() {
             altHeadings = altData.headings;
         }
 
+        if (altData && altData.hasOwnProperty('isNumbered')) {
+            isNumbered = altData.isNumbered;
+        }
+
 
         if (altData && altData.hasOwnProperty('title')) {
             navigationTitle.innerHTML = altData.title;
@@ -163,10 +168,13 @@ define([], function() {
 
 
         var chapterNames = Array.prototype.map.call(h2s, function(el, index) {
-            return (altHeadings[index]) ? altHeadings[index] : el.innerHTML;
+            return (altHeadings[index]) ? altHeadings[index] : el.textContent;
         });
 
         var navList = document.createElement('ol');
+        if (isNumbered === false) {
+            navList.setAttribute('class', 'no-numbers');
+        }
 
         // Add nav IDs to the <h2> headings
         for (var i = 0; i < h2s.length; i++) {
@@ -177,7 +185,12 @@ define([], function() {
             var navLink = document.createElement('a');
             navLink.href = '#' + h2s[i].getAttribute('id');
             navLink.innerHTML = chapterNames[i];
-            navLink.setAttribute('data-title', (i + 1) + '. ' + chapterNames[i]);
+
+            var dataTitle = chapterNames[i];
+            if (isNumbered) {
+                isNumbered = (i + 1) + '. ' + isNumbered;
+            }
+            navLink.setAttribute('data-title', dataTitle);
             navLink.addEventListener('click', jumpToHeading, false);
 
             navListItem.appendChild(navLink);
