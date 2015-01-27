@@ -54,6 +54,25 @@ define([], function() {
     var throttledResize = throttle(onResize, 300);
     var previousValue = false;
 
+    var mode = (typeof guardian === 'object' && guardian.hasOwnProperty('config')) ? 'web' : 'app';
+
+    var config = {
+        selectors: {
+            web: {
+                articleBody: '.content__main-column.content__main-column--article',
+                mainBody: '.content__main-column.content__main-column--article',
+                h2s: '.content__article-body h2'
+            },
+            app: {
+                articleBody: '.article__body',
+                mainBody: '.article',
+                h2s: '.article__body h2'
+            }
+        }
+    };
+
+
+
     function resizeWrapper() {
         if (navEl.className.indexOf('active') === -1) {
             return;
@@ -126,9 +145,9 @@ define([], function() {
 
 
     function setupDOM() {
-        mainBodyEl = document.querySelector('.content__main-column.content__main-column--article');
-        articleBodyEl = document.querySelector('.content__main-column.content__main-column--article');
-        h2s = document.querySelectorAll('.content__article-body h2');
+        mainBodyEl = document.querySelector(config.selectors[mode].mainBody);
+        articleBodyEl = document.querySelector(config.selectors[mode].articleBody);
+        h2s = document.querySelectorAll(config.selectors[mode].h2s);
 
         navEl = document.createElement('div');
         navEl.setAttribute('id','article-navigation');
