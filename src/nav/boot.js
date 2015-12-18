@@ -56,6 +56,8 @@ define([], function() {
 
     var mode = (typeof guardian === 'object' && guardian.hasOwnProperty('config')) ? 'web' : 'app';
 
+    var backToTop = "</br><a href ='#nav0'>back top top</a>"
+
     var config = {
         selectors: {
             web: {
@@ -93,10 +95,10 @@ define([], function() {
             if (navEl.className.indexOf('active') === -1) {
                 // Set timeout to wait for the correct height of the wrapper
                 setTimeout(function(){
-                    var navWrapper = document.querySelector('.nav_wrapper');
-                    navWrapper.style.height = navWrapper.getBoundingClientRect().height + 'px';
-                    navEl.className += ' active';
-                    resizeWrapper();
+                    //var navWrapper = document.querySelector('.nav_wrapper');
+                    //navWrapper.style.height = navWrapper.getBoundingClientRect().height + 'px';
+                    //navEl.className += ' active';
+                    //resizeWrapper();
                 }, 100);
             }
         } else {
@@ -143,6 +145,9 @@ define([], function() {
         window.scrollTo(0, pos);
     }
 
+    function insertAfter(node1, node2) {
+        node1.outerHTML += node2.outerHTML;
+    }
 
     function setupDOM() {
         mainBodyEl = document.querySelector(config.selectors[mode].mainBody);
@@ -157,9 +162,12 @@ define([], function() {
         introHeaderEl = document.createElement('div');
         introHeaderEl.className += ' intro_heading';
         introHeaderEl.innerHTML = DEFAULT_INTRO_HEADING_TEXT;
+        navEl.setAttribute('name','navHead');
         navEl.appendChild(introHeaderEl);
 
         var navigationTitle = document.createElement('h2');
+        navigationTitle.setAttribute('name', 'navMainHead');
+        navigationTitle.setAttribute('id', 'navMainHead');
         var altText = figureEl.getAttribute('data-alt');
         var altData;
 
@@ -201,9 +209,20 @@ define([], function() {
             h2s[i].setAttribute('id', 'nav' + i);
             h2s[i].setAttribute('name', 'nav' + i);
 
+
+            var tempH2 = (h2s[i].getAttribute('id'))
+            var targH2 = document.getElementById(tempH2)
+
+            console.log(targH2)
+
             var navLink = document.createElement('a');
             navLink.href = '#' + h2s[i].getAttribute('id');
             navLink.innerHTML = chapterNames[i];
+
+            var backToTopLink = document.createElement("a");
+             backToTopLink.innerHTML = "<span>Back to top</span> <span><svg xmlns='http://www.w3.org/2000/svg' width='15' height='14'><path fill='currentColor' d='M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z'></path></svg></span>";            
+            backToTopLink.setAttribute('href', '#navMainHead');
+            backToTopLink.className += 'gv-back-to-top';
 
             var dataTitle = chapterNames[i];
             if (isNumbered) {
@@ -214,6 +233,8 @@ define([], function() {
 
             navListItem.appendChild(navLink);
             navList.appendChild(navListItem);
+            //targH2.appendChild(backToTopLink);
+            insertAfter(targH2, backToTopLink)
         }
 
         navEl.appendChild(navList);

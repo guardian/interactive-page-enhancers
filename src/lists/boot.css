@@ -96,6 +96,7 @@
 }
 
 .article_nav.active {
+    visibility: hidden;
     font-size: 16px;
     position: fixed;
     z-index: 99999;
@@ -115,6 +116,10 @@
     box-shadow: 0 2px 1px rgba(0, 0, 0, .1);
     height: 43px;
 }
+
+
+
+
 
 @media (max-width: 46.25em) {
     .article_nav.active {
@@ -354,3 +359,5 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+

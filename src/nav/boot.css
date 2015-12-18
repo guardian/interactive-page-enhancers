@@ -71,7 +71,7 @@
 }
 
 .active-link {
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .active .active-link::before,
@@ -156,4 +156,27 @@
         page-break-inside: avoid;
         break-inside: avoid;
     }
+}
+
+
+
+.gv-back-to-top{
+    float:right;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 0.9rem;
+    text-decoration:none;
+    color:#767676;
+}
+
+.gv-back-to-top a{
+    float:right;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 0.9rem;
+    text-decoration:none;
+    color:#767676;
+}
+
+.gv-back-to-top a:hover{
+   
+    border-bottom:0.0625rem solid #dcdcdc;
 }
