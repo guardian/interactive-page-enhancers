@@ -152,7 +152,7 @@ define([], function() {
 
     function insertBefore(node1, node2) {
 
-        node1.outerHTML = "<p style='padding-bottom:36px>"+node2.outerHTML+"</p>" + node1.outerHTML;
+        node1.outerHTML = "<p class='mobile-padding-bottom'>"+node2.outerHTML+"</p>" + node1.outerHTML;
     }
 
     function setupDOM() {
@@ -240,8 +240,8 @@ define([], function() {
             navListItem.appendChild(navLink);
             navList.appendChild(navListItem);
             //targH2.appendChild(backToTopLink);
-            if(i>0){
-                insertBefore(targH2, backToTopLink)
+            if(i > 0){
+                insertBefore(targH2, backToTopLink);
             }
             
         }
@@ -261,9 +261,6 @@ define([], function() {
         var menuEl = document.createElement('div');
         menuEl.className +=  ' menu';
         navEl.appendChild(menuEl);
-
-
-
 
         if (altData && altData.hasOwnProperty('css')) {
             addCSS(altData.css);
