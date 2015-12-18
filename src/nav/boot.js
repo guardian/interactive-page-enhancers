@@ -149,6 +149,12 @@ define([], function() {
         node1.outerHTML += node2.outerHTML;
     }
 
+
+    function insertBefore(node1, node2) {
+
+        node1.outerHTML = "<p style='padding-bottom:36px>"+node2.outerHTML+"</p>" + node1.outerHTML;
+    }
+
     function setupDOM() {
         mainBodyEl = document.querySelector(config.selectors[mode].mainBody);
         articleBodyEl = document.querySelector(config.selectors[mode].articleBody);
@@ -234,7 +240,10 @@ define([], function() {
             navListItem.appendChild(navLink);
             navList.appendChild(navListItem);
             //targH2.appendChild(backToTopLink);
-            insertAfter(targH2, backToTopLink)
+            if(i>0){
+                insertBefore(targH2, backToTopLink)
+            }
+            
         }
 
         navEl.appendChild(navList);

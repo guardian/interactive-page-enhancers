@@ -161,15 +161,21 @@
 
 
 .gv-back-to-top{
-    float:right;
+    float:left;
     font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     font-size: 0.9rem;
     text-decoration:none;
     color:#767676;
-}
+   
 
+}
+ @media(min-width:739px) {
+        .gv-back-to-top{
+            float:right;
+        }
+    }
 .gv-back-to-top a{
-    float:right;
+
     font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     font-size: 0.9rem;
     text-decoration:none;
@@ -179,4 +185,9 @@
 .gv-back-to-top a:hover{
    
     border-bottom:0.0625rem solid #dcdcdc;
+}
+
+.mobile-padding-bottom{
+    padding-bottom:36px !important;
+    
 }
