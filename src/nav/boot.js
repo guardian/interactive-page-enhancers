@@ -54,7 +54,8 @@ define([], function() {
     var throttledResize = throttle(onResize, 300);
     var previousValue = false;
 
-    var mode = (typeof guardian === 'object' && guardian.hasOwnProperty('config')) ? 'web' : 'app';
+    // TODO: Better detection of iOS and Android web view
+    var mode = (!!document.querySelector('.content__main-column')) ? 'web' : 'app';
 
     var config = {
         selectors: {
