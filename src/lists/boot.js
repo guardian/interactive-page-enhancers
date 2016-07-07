@@ -66,7 +66,7 @@
     var LIST_HEADING_REGEX = /^\W*(\d+)\W*\.\W*(.+)\W*\|\W*(.+)\W*$/;
     var NUMBER_START_REGEX = /^\W?\d+?\./;
 
-    var DEFAULT_CSS = 'http://interactive.guim.co.uk/page-enhancers/super-lists/boot.css';
+    var DEFAULT_CSS = 'https://interactive.guim.co.uk/page-enhancers/july_2016/boot.css';
 
     function resizeWrapper() {
         if (navEl.className.indexOf('active') === -1) {

@@ -1,3 +1,8 @@
+// back to top button
+
+var backToTopButtonHTML = '<a class="dig-back-to-top js-back-to-top" href="#"><span><svg height="14" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z" fill="#333"></path></svg></span><span>Back to top</span></a>';
+
+
 define([], function() {
     'use strict';
 
@@ -33,7 +38,7 @@ define([], function() {
       };
 
 
-    var DEFAULT_CSS = 'http://interactive.guim.co.uk/page-enhancers/nav/boot.css';
+    var DEFAULT_CSS = 'https://interactive.guim.co.uk/page-enhancers/july_2016/nav/boot.css';
     var DEFAULT_INTRO_HEADING_TEXT = 'Introduction';
 
     var articleBodyEl;
@@ -196,11 +201,15 @@ define([], function() {
             navList.setAttribute('class', 'no-numbers');
         }
 
-        // Add nav IDs to the <h2> headings
+        // Add nav IDs to the <h2> headings -- 
         for (var i = 0; i < h2s.length; i++) {
+          
             var navListItem = document.createElement('li');
             h2s[i].setAttribute('id', 'nav' + i);
             h2s[i].setAttribute('name', 'nav' + i);
+
+            // if class != section-title
+            h2s[i].insertAdjacentHTML('beforeend', '<p>'+backToTopButtonHTML+'</p>');
 
             var navLink = document.createElement('a');
             navLink.href = '#' + h2s[i].getAttribute('id');
@@ -228,12 +237,10 @@ define([], function() {
         figureEl.innerHTML = '';
         figureEl.appendChild(wrapperEl);
 
-        // Add menu button
+        // Add menu button - MAY NEED REMOVING
         var menuEl = document.createElement('div');
         menuEl.className +=  ' menu';
         navEl.appendChild(menuEl);
-
-
 
 
         if (altData && altData.hasOwnProperty('css')) {
@@ -276,9 +283,9 @@ define([], function() {
     function boot(el) {
         figureEl = el;
         setupDOM();
-        throttledScroll();
+        //throttledScroll();   ---disabled this so sticky nav doesn't appear
         throttledResize();
-        window.addEventListener('scroll', throttledScroll);
+        //window.addEventListener('scroll', throttledScroll);
         window.addEventListener('resize', throttledResize);
     }
 
