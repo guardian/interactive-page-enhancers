@@ -1,7 +1,7 @@
 // back to top button
 
-var backToTopButtonHTML = '<a class="dig-back-to-top js-back-to-top" href="#"><span><svg height="14" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z" fill="#333"></path></svg></span><span>Back to top</span></a>';
-
+var backToTopButtonHTML = '<a class="dig-back-to-top js-back-to-top" href="#" style="color:#999;"><span><svg height="14" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M0.5,7 L5.75,2.5 L5.75,14 L7.25,14 L7.25,2.5 L12.5,7 L13,6 L7.25,0 L5.75,6e-17 L0,6 L0.5,7 L0.5,7 Z" fill="#999"></path></svg></span><span>Back to top</span></a>';
+//<div class="back-to-top-btn"><a href="#Stage-top">Back to top</a></div>
 
 define([], function() {
     'use strict';
@@ -53,7 +53,7 @@ define([], function() {
     var h2s;
 
     var altHeadings = [];
-    var isNumbered = true;
+    var isNumbered = false;
 
     var throttledScroll = throttle(onScroll, 300);
     var throttledResize = throttle(onResize, 300);
@@ -160,12 +160,12 @@ define([], function() {
         navEl.className += ' article_nav';
 
 
-        introHeaderEl = document.createElement('div');
-        introHeaderEl.className += ' intro_heading';
-        introHeaderEl.innerHTML = DEFAULT_INTRO_HEADING_TEXT;
-        navEl.appendChild(introHeaderEl);
+        // introHeaderEl = document.createElement('div');
+        // introHeaderEl.className += ' intro_heading';
+        // introHeaderEl.innerHTML = DEFAULT_INTRO_HEADING_TEXT;
+        // navEl.appendChild(introHeaderEl);
 
-        var navigationTitle = document.createElement('h2');
+        //var navigationTitle = document.createElement('h2');
         var altText = figureEl.getAttribute('data-alt');
         var altData;
 
@@ -183,13 +183,13 @@ define([], function() {
             isNumbered = altData.isNumbered;
         }
 
-
-        if (altData && altData.hasOwnProperty('title')) {
-            navigationTitle.innerHTML = altData.title;
-        } else {
-            navigationTitle.innerHTML = 'Contents';
-        }
-        navEl.appendChild(navigationTitle);
+        // -------Don't want title to appear on nav
+        // if (altData && altData.hasOwnProperty('title')) {
+        //     navigationTitle.innerHTML = altData.title;
+        // } else {
+        //     navigationTitle.innerHTML = 'Contents';
+        // }
+        //navEl.appendChild(navigationTitle);
 
 
         var chapterNames = Array.prototype.map.call(h2s, function(el, index) {
